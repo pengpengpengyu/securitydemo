@@ -1,6 +1,8 @@
 package com.mengxuegu.security.config;
 
 import com.mengxuegu.security.authentication.code.ImageCodeValidateFilter;
+import com.mengxuegu.security.authentication.mobile.MobileAuthenticationConfig;
+import com.mengxuegu.security.authentication.mobile.MobileValidateFilter;
 import com.mengxuegu.security.properties.AuthenticationPropertis;
 import com.mengxuegu.security.properties.SecurityProperties;
 import com.mengxuegu.security.authentication.CustomAuthenticationFailureHandler;
@@ -49,6 +51,12 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private DataSource dataSource;
+
+    @Autowired
+    private MobileValidateFilter mobileValidateFilter;
+
+    @Autowired
+    private MobileAuthenticationConfig mobileAuthenticationConfig;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -102,7 +110,8 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         .csrf().disable()  // 禁用csrf
         ;*/
         AuthenticationPropertis authenticationPropertis = securityProperties.getAuthentication();
-        http.addFilterBefore(imageCodeValidateFilter, UsernamePasswordAuthenticationFilter.class)  // 在验证用户名密码之前先执行验证码过滤器
+        http.addFilterBefore(mobileValidateFilter, UsernamePasswordAuthenticationFilter.class)  // 在验证用户名密码之前先执行手机号验证
+                .addFilterBefore(imageCodeValidateFilter, UsernamePasswordAuthenticationFilter.class)  // 在验证用户名密码之前先执行验证码过滤器
                 .formLogin()
                 .loginPage(authenticationPropertis.getLoginPage())  // 登录页面url
                 .loginProcessingUrl(authenticationPropertis.getLoginProcessingUrl())  // 认证页面url
@@ -112,13 +121,16 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .failureHandler(customAuthenticationFailureHandler)  // 请求失败处理handler
                 .and()
                 .authorizeRequests()
-                .antMatchers(authenticationPropertis.getPermitUrls()).permitAll()  // 开放登录请求页面，不需要认证
+                .antMatchers(authenticationPropertis.getPermitUrls()).permitAll()  // 开放登录请求页面等，不需要认证
                 .anyRequest().authenticated()
                 .and()
                 .csrf().disable()  // 禁用csrf
                 .rememberMe()
                 .tokenRepository(jdbcTokenRepository())  // 保存登录信息
-                .tokenValiditySeconds(60 * 60 * 34 * 7);  // 记住我时长7天
+                .tokenValiditySeconds(60 * 60 * 24 * 7);  // 记住我时长7天
+
+        // 将手机号相关的配置绑定过滤器链上
+        http.apply(mobileAuthenticationConfig);
     }
 
     /**

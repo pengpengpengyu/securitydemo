@@ -3,6 +3,8 @@ package com.mengxuegu.security.authentication;
 import com.mengxuegu.result.MengxueguResult;
 import com.mengxuegu.security.properties.LoginResponseType;
 import com.mengxuegu.security.properties.SecurityProperties;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.AuthenticationException;
@@ -19,6 +21,7 @@ import java.io.IOException;
  * 认证失败处理器
  */
 @Component
+@Slf4j
 public class CustomAuthenticationFailureHandler extends SimpleUrlAuthenticationFailureHandler {
 
     @Autowired
@@ -34,7 +37,12 @@ public class CustomAuthenticationFailureHandler extends SimpleUrlAuthenticationF
             httpServletResponse.getWriter().write(result.toJsonString());
         } else {
             // 重定向到认证错误页面
-            super.setDefaultFailureUrl(securityProperties.getAuthentication().getLoginPage() + "?error");
+            // 获取上一次请求路径
+            String referer = httpServletRequest.getHeader("Referer");
+            log.info("referer:{}", referer);
+            String lastRul = StringUtils.substringBefore(referer, "?");
+            log.info("上次请求路径：{}", lastRul);
+            super.setDefaultFailureUrl(lastRul + "?error");
             super.onAuthenticationFailure(httpServletRequest, httpServletResponse, e);
         }
     }

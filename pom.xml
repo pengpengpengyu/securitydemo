@@ -27,6 +27,7 @@
         <commons-lang.version>2.6</commons-lang.version>
         <commons-collections.version>3.2.2</commons-collections.version>
         <commons-io.version>2.6</commons-io.version>
+        <annotations.version>3.0.1</annotations.version>
         <!-- 定义版本号, 子模块直接引用-->
         <mengxuegu-security.version>1.0-SNAPSHOT</mengxuegu-security.version>
     </properties>
@@ -76,6 +77,11 @@
                 <groupId>commons-io</groupId>
                 <artifactId>commons-io</artifactId>
                 <version>${commons-io.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.code.findbugs</groupId>
+                <artifactId>annotations</artifactId>
+                <version>${annotations.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
