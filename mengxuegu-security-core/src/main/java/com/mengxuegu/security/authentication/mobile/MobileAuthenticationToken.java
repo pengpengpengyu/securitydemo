@@ -17,7 +17,7 @@ public class MobileAuthenticationToken extends AbstractAuthenticationToken {
     private static final long serialVersionUID = SpringSecurityCoreVersion.SERIAL_VERSION_UID;
 
     // 认证之前放手机号码，认证之后放用户信息
-    private Object principal;
+    private final Object principal;
 
     /**
      * 开始认证时，创建一个MobileAuthenticationToken实例，接受的是手机号码，并且表示未认证
@@ -82,6 +82,7 @@ public class MobileAuthenticationToken extends AbstractAuthenticationToken {
         return this.principal;
     }
 
+    @Override
     public void setAuthenticated(boolean isAuthenticationed) throws IllegalArgumentException {
         if (isAuthenticationed) {
             throw new IllegalArgumentException("Cannot set this token to trused-use constructor which takes a GrantedAuthority list instad");

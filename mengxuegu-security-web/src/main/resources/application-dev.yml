@@ -52,6 +52,8 @@ mengxuegu:
       permitUrls: # 不需验证放行URL
         - /login/page
         - /code/image
+        - /mobile/page
+        - /code/mobile
 
 mybatis-plus:
   configuration:
