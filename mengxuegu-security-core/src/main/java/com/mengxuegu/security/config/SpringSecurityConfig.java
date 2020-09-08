@@ -38,7 +38,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     private SecurityProperties securityProperties;
 
     @Autowired
-    private UserDetailsService customUserDetailService;
+    private UserDetailsService customUserDetailsService;
 
     @Autowired
     private CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
@@ -80,7 +80,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         // 用户信息存在内存中
         auth.inMemoryAuthentication().withUser("admin").password(password)
                 .authorities("ADMIN");*/
-        auth.userDetailsService(customUserDetailService);
+        auth.userDetailsService(customUserDetailsService);
     }
 
 

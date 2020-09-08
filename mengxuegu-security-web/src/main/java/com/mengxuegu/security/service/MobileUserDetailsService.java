@@ -14,8 +14,7 @@ import org.springframework.stereotype.Service;
  * @date 2020/9/6 20:17
  */
 @Slf4j
-@Service(value = "mobileUserDetailsService")
-public class MobileUserDetailsService implements UserDetailsService {
+@Service public class MobileUserDetailsService implements UserDetailsService {
     /**
      * Locates the user based on the username. In the actual implementation, the search
      * may possibly be case sensitive, or case insensitive depending on how the
@@ -39,7 +38,7 @@ public class MobileUserDetailsService implements UserDetailsService {
         // 3.封装用户信息
 
         // 后期走数据库查询之后mobile参数应该放用户名，否则remember-me功能无效
-        return new User("meng","",true,true,true,
+        return new User("admin","",true,true,true,
                 true, AuthorityUtils.commaSeparatedStringToAuthorityList("ADMIN"));
     }
 }

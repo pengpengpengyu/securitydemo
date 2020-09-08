@@ -16,7 +16,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
  */
 public class MobileAuthenticationProvider implements AuthenticationProvider {
 
-    private UserDetailsService userDetailsService;
+    UserDetailsService userDetailsService;
 
     /**
      * Performs authentication with the same contract as
@@ -55,7 +55,7 @@ public class MobileAuthenticationProvider implements AuthenticationProvider {
 
         authenticationToken.setDetails(mobileAuthenticationToken.getDetails());
 
-        return authentication;
+        return authenticationToken;
     }
 
     /**
@@ -87,9 +87,10 @@ public class MobileAuthenticationProvider implements AuthenticationProvider {
 
     /**
      * 注入MobileUserDetailService
+     *
      * @param userDetailsService
      */
     public void setUserDetailsService(UserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
-   }
+    }
 }
