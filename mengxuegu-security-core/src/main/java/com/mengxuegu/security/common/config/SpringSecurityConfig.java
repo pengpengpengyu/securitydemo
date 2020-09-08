@@ -3,6 +3,7 @@ package com.mengxuegu.security.common.config;
 import com.mengxuegu.security.authentication.code.ImageCodeValidateFilter;
 import com.mengxuegu.security.authentication.mobile.MobileAuthenticationConfig;
 import com.mengxuegu.security.authentication.mobile.MobileValidateFilter;
+import com.mengxuegu.security.authentication.session.CustomInvalidSessionStrategy;
 import com.mengxuegu.security.properties.AuthenticationPropertis;
 import com.mengxuegu.security.properties.SecurityProperties;
 import com.mengxuegu.security.authentication.CustomAuthenticationFailureHandler;
@@ -57,6 +58,9 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private MobileAuthenticationConfig mobileAuthenticationConfig;
+
+    @Autowired
+    private CustomInvalidSessionStrategy customInvalidSessionStrategy;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -127,7 +131,10 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()  // 禁用csrf
                 .rememberMe()
                 .tokenRepository(jdbcTokenRepository())  // 保存登录信息
-                .tokenValiditySeconds(authenticationPropertis.getTokenValiditySeconds());  // 记住我时长7天
+                .tokenValiditySeconds(authenticationPropertis.getTokenValiditySeconds())  // 记住我时长7天
+                .and()
+                .sessionManagement()
+                .invalidSessionStrategy(customInvalidSessionStrategy);  // session失效处理配置
 
         // 将手机号相关的配置绑定过滤器链上
         http.apply(mobileAuthenticationConfig);

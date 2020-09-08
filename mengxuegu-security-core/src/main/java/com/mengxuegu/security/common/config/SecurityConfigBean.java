@@ -2,6 +2,7 @@ package com.mengxuegu.security.common.config;
 
 import com.mengxuegu.security.authentication.mobile.SmsCodeSender;
 import com.mengxuegu.security.authentication.mobile.SmsSend;
+import com.mengxuegu.security.authentication.session.CustomInvalidSessionStrategy;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,4 +20,16 @@ public class SecurityConfigBean {
     public SmsSend smsSend() {
         return new SmsCodeSender();
     }
+
+    /**
+     * 注入session失效策略实例
+     *
+     * @return
+     */
+    @Bean
+    @ConditionalOnMissingBean(CustomInvalidSessionStrategy.class)
+    public CustomInvalidSessionStrategy customInvalidSessionStrategy() {
+        return new CustomInvalidSessionStrategy();
+    }
+
 }
