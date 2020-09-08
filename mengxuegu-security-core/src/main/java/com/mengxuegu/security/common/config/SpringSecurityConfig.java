@@ -23,6 +23,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
+import org.springframework.security.web.session.InvalidSessionStrategy;
+import org.springframework.security.web.session.SessionInformationExpiredStrategy;
 
 import javax.sql.DataSource;
 
@@ -60,7 +62,10 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     private MobileAuthenticationConfig mobileAuthenticationConfig;
 
     @Autowired
-    private CustomInvalidSessionStrategy customInvalidSessionStrategy;
+    private InvalidSessionStrategy invalidSessionStrategy;
+
+    @Autowired
+    private SessionInformationExpiredStrategy sessionInformationExpiredStrategy;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -133,8 +138,12 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .tokenRepository(jdbcTokenRepository())  // 保存登录信息
                 .tokenValiditySeconds(authenticationPropertis.getTokenValiditySeconds())  // 记住我时长7天
                 .and()
-                .sessionManagement()
-                .invalidSessionStrategy(customInvalidSessionStrategy);  // session失效处理配置
+                .sessionManagement()  // session管理
+                .invalidSessionStrategy(invalidSessionStrategy)  // session失效处理配置
+                .maximumSessions(1)  // 每个用户在系统中的最大session数
+                .expiredSessionStrategy(sessionInformationExpiredStrategy)  // 当用户达到最大session数后,则调用此处实现
+                .maxSessionsPreventsLogin(true);  // 当一个用户达到最大session数,则不允许后面进行登录;如果同时配置上面规则和本规则,则本规则生效,不会再踢出用户
+
 
         // 将手机号相关的配置绑定过滤器链上
         http.apply(mobileAuthenticationConfig);

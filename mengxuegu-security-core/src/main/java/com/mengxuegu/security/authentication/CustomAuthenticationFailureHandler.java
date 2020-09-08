@@ -40,9 +40,14 @@ public class CustomAuthenticationFailureHandler extends SimpleUrlAuthenticationF
             // 获取上一次请求路径
             String referer = httpServletRequest.getHeader("Referer");
             log.info("referer:{}", referer);
-            String lastRul = StringUtils.substringBefore(referer, "?");
-            log.info("上次请求路径：{}", lastRul);
-            super.setDefaultFailureUrl(lastRul + "?error");
+
+            // 如果需要认证(同一个用户别处登录,踢掉当前用户),则跳转到登录页面
+            Object toAuthentication = httpServletRequest.getAttribute("toAuthention");
+            String lastUrl = null != toAuthentication ?
+                    securityProperties.getAuthentication().getLoginPage() : StringUtils.substringBefore(referer, "?");
+
+            log.info("上次请求路径：{}", lastUrl);
+            super.setDefaultFailureUrl(lastUrl + "?error");
             super.onAuthenticationFailure(httpServletRequest, httpServletResponse, e);
         }
     }

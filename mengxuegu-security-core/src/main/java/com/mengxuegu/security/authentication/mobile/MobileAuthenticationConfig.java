@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.authentication.RememberMeServices;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
 import org.springframework.stereotype.Component;
 
 /**
@@ -46,6 +47,8 @@ public class MobileAuthenticationConfig
         mobileAuthenticationFilter.setAuthenticationFailureHandler(customAuthenticationFailureHandler);
         // 设置记住我功能
         mobileAuthenticationFilter.setRememberMeServices(http.getSharedObject(RememberMeServices.class));
+        // session会话管理功能
+        mobileAuthenticationFilter.setSessionAuthenticationStrategy(http.getSharedObject(SessionAuthenticationStrategy.class));
 
         // 为Provider指定明确的MobileUserDetailsService来查询用户信息
         MobileAuthenticationProvider provider = new MobileAuthenticationProvider();
