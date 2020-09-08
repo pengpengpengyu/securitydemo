@@ -1,4 +1,4 @@
-package com.mengxuegu.security.config;
+package com.mengxuegu.security.common.config;
 
 import com.mengxuegu.security.authentication.code.ImageCodeValidateFilter;
 import com.mengxuegu.security.authentication.mobile.MobileAuthenticationConfig;
@@ -127,7 +127,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()  // 禁用csrf
                 .rememberMe()
                 .tokenRepository(jdbcTokenRepository())  // 保存登录信息
-                .tokenValiditySeconds(60 * 60 * 24 * 7);  // 记住我时长7天
+                .tokenValiditySeconds(authenticationPropertis.getTokenValiditySeconds());  // 记住我时长7天
 
         // 将手机号相关的配置绑定过滤器链上
         http.apply(mobileAuthenticationConfig);

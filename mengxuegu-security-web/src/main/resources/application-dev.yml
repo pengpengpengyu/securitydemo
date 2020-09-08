@@ -1,5 +1,8 @@
 server:
   port: 80
+  servlet:
+    session:
+      timeout: 1m # 默认30m 不能小于1分钟
 
 spring:
   thymeleaf:
@@ -40,20 +43,21 @@ spring:
 mengxuegu:
   security:
     authentication:
-      loginPage: /login/page
-      loginProcessingUrl: /login/form
-      usernameParameter: name
-      passwordParameter: pwd
-      staticPaths:
+      loginPage: /login/page  # 登录页面
+      loginProcessingUrl: /login/form  #登录请求rul
+      usernameParameter: name  # 表单用户名参数名
+      passwordParameter: pwd  # 表单密码参数名
+      staticPaths:  # 静态资源路径
         - /dist/**
         - /modules/**
         - /plugins/**
       loginType: REDIRECT # 认证之后相应的类型
-      permitUrls: # 不需验证放行URL
+      permitUrls: # 不需验证，放行URL
         - /login/page
         - /code/image
         - /mobile/page
         - /code/mobile
+      tokenValiditySeconds: 604800 # 记住我有效市场，单位秒
 
 mybatis-plus:
   configuration:

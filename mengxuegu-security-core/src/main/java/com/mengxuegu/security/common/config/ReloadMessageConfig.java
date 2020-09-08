@@ -1,4 +1,4 @@
-package com.mengxuegu.security.config;
+package com.mengxuegu.security.common.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

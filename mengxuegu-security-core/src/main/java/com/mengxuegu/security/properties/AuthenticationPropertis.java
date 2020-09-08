@@ -43,5 +43,10 @@ public class AuthenticationPropertis {
      */
     private LoginResponseType loginType = LoginResponseType.REDIRECT;
 
+    /**
+     * 记住我有效时长
+     */
+    private Integer tokenValiditySeconds = 60 * 60 * 24 * 7;
+
 
 }

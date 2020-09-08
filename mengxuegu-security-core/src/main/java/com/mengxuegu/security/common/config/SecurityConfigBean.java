@@ -1,4 +1,4 @@
-package com.mengxuegu.security.config;
+package com.mengxuegu.security.common.config;
 
 import com.mengxuegu.security.authentication.mobile.SmsCodeSender;
 import com.mengxuegu.security.authentication.mobile.SmsSend;
