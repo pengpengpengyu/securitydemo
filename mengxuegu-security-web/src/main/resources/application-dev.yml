@@ -3,6 +3,8 @@ server:
   servlet:
     session:
       timeout: 30m # 默认30m 不能小于1分钟
+      cookie:
+        name: JSESSIONID # 统一指定浏览器中Cookie保存的SessionID名称
 
 spring:
   thymeleaf:
@@ -37,7 +39,11 @@ spring:
       stat-view-servlet:
         login-password: pywang
         login-username: pywang
-
+  session:
+    store-type: redis # 使用redis存储session信息
+  redis:
+    port: 6379 # 本地环境可以不配置
+    host: xxxx # 本地环境可以不配置
 
 # 资源权限分配配置
 mengxuegu:
