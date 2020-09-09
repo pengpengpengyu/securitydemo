@@ -2,6 +2,7 @@ package com.mengxuegu.security.authentication.session;
 
 import com.mengxuegu.result.MengxueguResult;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.web.session.InvalidSessionStrategy;
 
 import javax.servlet.http.Cookie;
@@ -17,10 +18,20 @@ import java.io.IOException;
  */
 public class CustomInvalidSessionStrategy implements InvalidSessionStrategy {
 
+
+    private SessionRegistry sessionRegistry;
+
+
+
+    public CustomInvalidSessionStrategy(SessionRegistry sessionRegistry) {
+        this.sessionRegistry = sessionRegistry;
+    }
+
     @Override
     public void onInvalidSessionDetected(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws IOException {
-
-        //cancleCookie(httpServletRequest, httpServletResponse);
+        // 删除已失效的session
+        sessionRegistry.removeSessionInformation(httpServletRequest.getRequestedSessionId());
+        cancleCookie(httpServletRequest, httpServletResponse);
         MengxueguResult result = MengxueguResult.build(HttpStatus.UNAUTHORIZED.value(), "登录已超时，请重新登录");
         httpServletResponse.setContentType("application/json;charset=utf-8");
         httpServletResponse.getWriter().write(result.toJsonString());
