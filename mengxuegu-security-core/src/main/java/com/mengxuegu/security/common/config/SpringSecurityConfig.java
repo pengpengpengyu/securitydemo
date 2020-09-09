@@ -4,6 +4,7 @@ import com.mengxuegu.security.authentication.code.ImageCodeValidateFilter;
 import com.mengxuegu.security.authentication.mobile.MobileAuthenticationConfig;
 import com.mengxuegu.security.authentication.mobile.MobileValidateFilter;
 import com.mengxuegu.security.authentication.session.CustomInvalidSessionStrategy;
+import com.mengxuegu.security.authentication.session.CustomLogoutHandler;
 import com.mengxuegu.security.properties.AuthenticationPropertis;
 import com.mengxuegu.security.properties.SecurityProperties;
 import com.mengxuegu.security.authentication.CustomAuthenticationFailureHandler;
@@ -18,6 +19,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -67,10 +70,23 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private SessionInformationExpiredStrategy sessionInformationExpiredStrategy;
 
+    @Autowired
+    private CustomLogoutHandler customLogoutHandler;
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         // 设置默认的加密方式
         return new BCryptPasswordEncoder();
+    }
+
+    /**
+     * 注册sessionRegistry
+     *
+     * @return
+     */
+    @Bean
+    public SessionRegistry sessionRegistry() {
+        return new SessionRegistryImpl();
     }
 
     /**
@@ -142,7 +158,12 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .invalidSessionStrategy(invalidSessionStrategy)  // session失效处理配置
                 .maximumSessions(1)  // 每个用户在系统中的最大session数
                 .expiredSessionStrategy(sessionInformationExpiredStrategy)  // 当用户达到最大session数后,则调用此处实现
-                .maxSessionsPreventsLogin(true);  // 当一个用户达到最大session数,则不允许后面进行登录;如果同时配置上面规则和本规则,则本规则生效,不会再踢出用户
+                .maxSessionsPreventsLogin(true)  // 当一个用户达到最大session数,则不允许后面进行登录;如果同时配置上面规则和本规则,则本规则生效,不会再踢出用户
+                .sessionRegistry(sessionRegistry())
+                .and()
+                .and()
+                .logout()
+                .addLogoutHandler(customLogoutHandler); // 添加点击退出处理，清除session信息
 
 
         // 将手机号相关的配置绑定过滤器链上
