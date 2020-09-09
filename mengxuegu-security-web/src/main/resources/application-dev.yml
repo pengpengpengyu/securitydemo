@@ -78,3 +78,9 @@ mybatis-plus:
       logic-not-delete-value: 1
       # 删除后
       logic-delete-value: 0
+  type-aliases-package: com.mengxuegu.web.entites
+
+# sql打印
+logging:
+  level:
+    com.mengxuegu.web.mapper: debug
