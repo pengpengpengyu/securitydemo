@@ -5,12 +5,14 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.mengxuegu.web.entites.SysUser;
 import com.mengxuegu.web.mapper.SysUserMapper;
 import com.mengxuegu.web.service.SysUserService;
+import org.springframework.stereotype.Service;
 
 /**
  * @author wangpengyu
  * @version 1.0
  * @date 2020/9/9 17:24
  */
+@Service
 public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> implements SysUserService {
 
 

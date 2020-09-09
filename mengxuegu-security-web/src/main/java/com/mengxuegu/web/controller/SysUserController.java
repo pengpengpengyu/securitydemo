@@ -1,6 +1,7 @@
 package com.mengxuegu.web.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,6 +29,7 @@ public class SysUserController {
      * @return
      */
     @GetMapping(value = {"/", ""})
+    @PreAuthorize("hasAuthority('sys:user')")
     public ModelAndView userPage() {
         ModelAndView mv = new ModelAndView(HTML_PREFIX + "user-list");
         return mv;

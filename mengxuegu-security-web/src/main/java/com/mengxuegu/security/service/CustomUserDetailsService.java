@@ -1,38 +1,34 @@
 package com.mengxuegu.security.service;
 
+import com.mengxuegu.web.entites.SysUser;
+import com.mengxuegu.web.service.SysUserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+
 @Slf4j
 @Service
-public class CustomUserDetailsService implements UserDetailsService {
+public class CustomUserDetailsService extends AbstractUserDetailsService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private SysUserService sysUserService;
+
+    /**
+     * 获取须认证的用户
+     *
+     * @param username
+     * @return
+     */
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        log.info("输入的用户名是:{}", username);
-        String password = passwordEncoder.encode("password");
-
-        // 1.根据用户名查询用户信息
-        if (!"admin".equals(username)) {
-            throw new UsernameNotFoundException("用户名或密码错误");
-        }
-
-        // 2.查询用户权限
-
-        // 3.封装用户信息，账号密码/资源权限等
-        // SpringSecurity底层校验身份合法性
-
-
-        return new User(username, password, AuthorityUtils.commaSeparatedStringToAuthorityList("ADMIN"));
+    public SysUser findSysuser(String username) {
+        log.info("请求认证的用户是:{}", username);
+        return sysUserService.findByUserName(username);
     }
+
+
 }
