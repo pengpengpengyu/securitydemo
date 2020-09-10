@@ -2,8 +2,6 @@ package com.mengxuegu.security.service;
 
 import com.mengxuegu.web.entites.SysPermission;
 import com.mengxuegu.web.entites.SysUser;
-import com.mengxuegu.web.service.SysPermissionService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,9 +17,6 @@ import java.util.stream.Collectors;
  * userDetailsService抽象类,用于简化代码
  */
 public abstract class AbstractUserDetailsService implements UserDetailsService {
-
-    @Autowired
-    private SysPermissionService sysPermissionService;
 
     /**
      * 获取须认证的用户
@@ -47,6 +42,7 @@ public abstract class AbstractUserDetailsService implements UserDetailsService {
         List<GrantedAuthority> authorities = new ArrayList<>();
         authorities = permissions.stream().map(p -> new SimpleGrantedAuthority(p.getCode()))
                 .collect(Collectors.toList());
+        // 封装角色，角色需要加前缀ROLE_,使用的时候不用加
         authorities.addAll(sysUser.getSysRoles().stream().map(r -> new SimpleGrantedAuthority("ROLE_" + r.getCode())).collect(Collectors.toList()));
         sysUser.setAuthorities(authorities);
         return sysUser;
