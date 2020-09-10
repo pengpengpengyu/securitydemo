@@ -31,6 +31,11 @@ public class SysRole implements Serializable {
     private String name;
 
     /**
+     * 角色代码
+     */
+    private String code;
+
+    /**
      * 备注
      */
     private String remark;

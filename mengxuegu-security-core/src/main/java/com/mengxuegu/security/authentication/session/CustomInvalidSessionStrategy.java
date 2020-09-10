@@ -31,7 +31,7 @@ public class CustomInvalidSessionStrategy implements InvalidSessionStrategy {
     public void onInvalidSessionDetected(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws IOException {
         // 删除已失效的session
         sessionRegistry.removeSessionInformation(httpServletRequest.getRequestedSessionId());
-        cancleCookie(httpServletRequest, httpServletResponse);
+       // cancleCookie(httpServletRequest, httpServletResponse);
         MengxueguResult result = MengxueguResult.build(HttpStatus.UNAUTHORIZED.value(), "登录已超时，请重新登录");
         httpServletResponse.setContentType("application/json;charset=utf-8");
         httpServletResponse.getWriter().write(result.toJsonString());

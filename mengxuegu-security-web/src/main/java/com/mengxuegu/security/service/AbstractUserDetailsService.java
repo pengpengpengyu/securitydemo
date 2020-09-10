@@ -4,12 +4,14 @@ import com.mengxuegu.web.entites.SysPermission;
 import com.mengxuegu.web.entites.SysUser;
 import com.mengxuegu.web.service.SysPermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,6 +25,7 @@ public abstract class AbstractUserDetailsService implements UserDetailsService {
 
     /**
      * 获取须认证的用户
+     *
      * @param userNameOrMobile
      * @return
      */
@@ -32,20 +35,20 @@ public abstract class AbstractUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String userNameOrMobile) throws UsernameNotFoundException {
         // 获取用户
         SysUser sysUser = findSysuser(userNameOrMobile);
-        if (null == sysUser) {
-            throw new UsernameNotFoundException("用户名或密码错误");
-        }
 
         // 查询权限
-        List<SysPermission> permissions = sysPermissionService.findByUserId(sysUser.getId());
+        List<SysPermission> permissions = sysUser.getPermissions();
         if (CollectionUtils.isEmpty(permissions)) {
             return sysUser;
         }
 
         // 封装权限
-        sysUser.setPermissions(permissions);
-        sysUser.setAuthorities(permissions.stream().map(p -> new SimpleGrantedAuthority(p.getCode()))
-        .collect(Collectors.toList()));
+        // sysUser.setPermissions(permissions);
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        authorities = permissions.stream().map(p -> new SimpleGrantedAuthority(p.getCode()))
+                .collect(Collectors.toList());
+        authorities.addAll(sysUser.getSysRoles().stream().map(r -> new SimpleGrantedAuthority("ROLE_" + r.getCode())).collect(Collectors.toList()));
+        sysUser.setAuthorities(authorities);
         return sysUser;
     }
 }

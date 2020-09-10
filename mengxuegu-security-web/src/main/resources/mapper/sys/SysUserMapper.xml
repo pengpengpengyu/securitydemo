@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mengxuegu.web.mapper.SysUserMapper">
+
+    <!-- 封装用户信息，及用户角色，用户权限 -->
+    <resultMap id="sysUserInfoMap" type="com.mengxuegu.web.entites.SysUser" autoMapping="true">
+        <id column="uid" property="id"/>
+        <collection property="sysRoles" ofType="com.mengxuegu.web.entites.SysRole" autoMapping="true" >
+            <id property="id" column="rid"/>
+            <result property="code" column="rCode"/>
+            <result property="name" column="rName"/>
+        </collection>
+        <collection property="permissions" ofType="com.mengxuegu.web.entites.SysPermission" autoMapping="true">
+            <id property="id" column="pid"/>
+        </collection>
+    </resultMap>
+
+
+    <!-- 查询用户信息 -->
+    <select id="selectSysUserInfo" parameterType="java.util.Map" resultMap="sysUserInfoMap">
+        select distinct
+        u.id as uid, u.username, u.password, u.mobile, u.nick_name, u.email,
+        p.id as pid, p.parent_id, p.name, p.code, p.url, p.type,
+        p.icon, p.remark,
+        r.id as rid, r.name as rName, r.code as rCode
+        from sys_user u left join sys_user_role ur on u.id = ur.user_id
+        left join sys_role r on ur.role_id = r.id
+        left join sys_role_permission rp on r.id = rp.role_id
+        left join sys_permission p on rp.permission_id = p.id
+        <where>
+            <if test="username != null and username != ''">
+                u.username = #{username}
+            </if>
+            <if test="mobile != null and mobile != ''">
+                u.mobile = #{mobile}
+            </if>
+            <if test="email != null and email != ''">
+                u.email = #{email}
+            </if>
+            <if test="userId != null and userId != ''">
+                u.id = #{userId}
+            </if>
+        </where>
+    </select>
+</mapper>
