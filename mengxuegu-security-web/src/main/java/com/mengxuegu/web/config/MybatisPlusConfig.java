@@ -1,6 +1,8 @@
 package com.mengxuegu.web.config;
 
-import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
+import com.baomidou.mybatisplus.annotation.DbType;
+import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -13,6 +15,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  */
 @Configuration
 @EnableTransactionManagement
+@MapperScan("com.mengxuegu.web.mapper")
 public class MybatisPlusConfig {
 
     /**
@@ -21,8 +24,11 @@ public class MybatisPlusConfig {
      * @return
      */
     @Bean
-    public PaginationInnerInterceptor paginationInnerInterceptor() {
-        return new PaginationInnerInterceptor();
+    public PaginationInterceptor paginationInnerInterceptor() {
+        PaginationInterceptor paginationInterceptor = new PaginationInterceptor();
+        paginationInterceptor.setDbType(DbType.MYSQL);
+        return paginationInterceptor;
     }
+
 
 }
