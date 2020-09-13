@@ -20,4 +20,12 @@ public interface SysPermissionService extends IService<SysPermission> {
      * @return
      */
     List<SysPermission> findByUserId(Long userId);
+
+    /**
+     * 根据ID删除权限及其子权限
+     *
+     * @param Id
+     * @return
+     */
+    boolean deleteById(Long Id);
 }

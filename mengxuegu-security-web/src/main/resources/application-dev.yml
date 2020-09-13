@@ -44,6 +44,10 @@ spring:
   redis:
     port: 6379 # 本地环境可以不配置
     host: xxxx # 本地环境可以不配置
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true # 开启对put和delete请求方式的支持
 
 # 资源权限分配配置
 mengxuegu:

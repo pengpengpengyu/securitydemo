@@ -1,6 +1,8 @@
 package com.mengxuegu.web.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.mengxuegu.result.MengxueguResult;
+import com.mengxuegu.web.entites.SysPermission;
 import com.mengxuegu.web.service.SysPermissionService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,5 +50,52 @@ public class SysPermissionController {
     @PreAuthorize("hasAnyAuthority('sys:permission:list')")
     public MengxueguResult list() {
         return MengxueguResult.ok(sysPermissionService.list());
+    }
+
+    /**
+     * 跳转权限新增或修改页面
+     *
+     * @param id
+     * @return
+     */
+    @GetMapping(value = {"/form", "/form/{id}"})
+    @PreAuthorize("hasAnyAuthority('sys:permission:add','sys:permission:edit')")
+    public ModelAndView form(@PathVariable(value = "id", required = false) Long id) {
+        ModelAndView mv = new ModelAndView(HTML_PREFIX + "permission-form");
+        SysPermission sysPermission = new SysPermission();
+        if (null != id) {
+            sysPermission = sysPermissionService.getById(id);
+        }
+        mv.addObject("permission", sysPermission);
+
+        return mv;
+    }
+
+
+    /**
+     * 新增或修改权限
+     *
+     * @param sysPermission
+     * @return
+     */
+    @RequestMapping(method = {RequestMethod.PUT, RequestMethod.POST})
+    @PreAuthorize("hasAnyAuthority('sys:permission:add', 'sys:permisssion:edit')")
+    public ModelAndView saveOrUpdate(SysPermission sysPermission) {
+        sysPermissionService.saveOrUpdate(sysPermission);
+        ModelAndView mv = new ModelAndView(HTML_PREFIX + "permission-list");
+        return mv;
+    }
+
+    /**
+     * 删除资源及其子资源
+     *
+     * @param id
+     * @return
+     */
+    @DeleteMapping(value = "/{id}")
+    @PreAuthorize("hasAnyAuthority('sys:permission:delete')")
+    public Object delete(@PathVariable("id") Long id) {
+        sysPermissionService.deleteById(id);
+        return MengxueguResult.ok();
     }
 }
