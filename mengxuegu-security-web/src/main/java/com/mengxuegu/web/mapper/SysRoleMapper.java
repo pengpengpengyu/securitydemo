@@ -16,9 +16,17 @@ public interface SysRoleMapper extends BaseMapper<SysRole> {
     /**
      * 分页查询角色信息
      *
-     * @param page 分页对象
+     * @param page    分页对象
      * @param sysRole
      * @return
      */
     IPage<SysRole> selectPage(@Param("page") Page<SysRole> page, @Param("p") SysRole sysRole);
+
+    /**
+     * 根据角色ID删除用户与角色关联关系
+     *
+     * @param roleId
+     * @return
+     */
+    int deleteUserRoleByRoleId(@Param("roleId") Long roleId);
 }

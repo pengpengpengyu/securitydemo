@@ -7,10 +7,7 @@ import com.mengxuegu.web.service.SysRoleService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
@@ -57,4 +54,50 @@ public class SysRoleController {
         return MengxueguResult.ok(sysRoleService.findPage(page, sysRole));
     }
 
+    /**
+     * 跳转新增修改页面
+     *
+     * @param id
+     * @return
+     */
+    @GetMapping(value = {"/form", "/form/{id}"})
+    @PreAuthorize("hasAnyAuthority('sys:role:add','sys:role:edit')")
+    public ModelAndView form(@PathVariable(value = "id", required = false) Long id) {
+        ModelAndView mv = new ModelAndView(HTML_PREFIX + "role-form");
+
+        SysRole sysRole = sysRoleService.findById(id);
+
+        mv.addObject("role", sysRole);
+
+        return mv;
+    }
+
+    /**
+     * 修改或新增角色
+     *
+     * @param sysRole
+     * @return
+     */
+    @RequestMapping(method = {RequestMethod.POST, RequestMethod.PUT})
+    @PreAuthorize("hasAnyAuthority('sys:role:add', 'sys:role:edit')")
+    public ModelAndView saveOrUpdate(SysRole sysRole) {
+        ModelAndView mv = new ModelAndView(HTML_PREFIX + "role-list");
+
+        sysRoleService.saveOrUpdate(sysRole);
+
+        return mv;
+    }
+
+    /**
+     * 删除角色
+     *
+     * @param id
+     * @return
+     */
+    @DeleteMapping(value = "/{id}")
+    @PreAuthorize("hasAuthority('sys:role:delete')")
+    public Object delete(@PathVariable("id") Long id) {
+        sysRoleService.deleteById(id);
+        return MengxueguResult.ok();
+    }
 }

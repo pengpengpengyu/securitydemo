@@ -2,6 +2,7 @@ package com.mengxuegu.web.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.mengxuegu.web.entites.SysUser;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.Map;
 
@@ -19,4 +20,12 @@ public interface SysUserMapper extends BaseMapper<SysUser> {
      * @return
      */
     SysUser selectSysUserInfo(Map<String, Object> params);
+
+    /**
+     * 根据角色Id查询拥有某角色的用户
+     *
+     * @param roleId
+     * @return
+     */
+    long selectUserCountByRoleId(@Param("roleId") Long roleId);
 }

@@ -44,4 +44,11 @@
             </if>
         </where>
     </select>
+
+    <!-- 根据角色Id查询拥有某角色的用户 -->
+    <select id="selectUserCountByRoleId" resultType="long">
+        select count(*) from sys_user u
+        left join sys_user_role ur on u.id = ur.user_id
+        where ur.role_id = #{roleId}
+    </select>
 </mapper>

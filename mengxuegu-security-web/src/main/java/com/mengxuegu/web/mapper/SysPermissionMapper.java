@@ -20,4 +20,29 @@ public interface SysPermissionMapper extends BaseMapper<SysPermission> {
      * @return
      */
     List<SysPermission> selectSysPermissionsByUserId(@Param("userId") Long userId);
+
+    /**
+     * 根据角色ID查询对应权限
+     *
+     * @param roleId
+     * @return
+     */
+    List<SysPermission> selectSysPermissionsByRoleId(@Param("roleId") Long roleId);
+
+    /**
+     * 根据角色Id删除对应权限
+     *
+     * @param roleId
+     * @return
+     */
+    int deleteRolePermissionByRoleId(@Param("roleId") Long roleId);
+
+    /**
+     * 新增角色对应的权限
+     *
+     * @param roleId
+     * @param perIds
+     * @return
+     */
+    int saveRolePermission(@Param("roleId") Long roleId, @Param("perIds") List<Long> perIds);
 }

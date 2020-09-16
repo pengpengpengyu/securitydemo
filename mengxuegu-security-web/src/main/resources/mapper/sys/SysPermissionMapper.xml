@@ -12,4 +12,25 @@
         left join sys_role_permission rp on r.id = rp.role_id
         left join sys_permission p on rp.permission_id = p.id
     </select>
+
+    <!-- 根据角色ID查询对应权限 -->
+    <select id="selectSysPermissionsByRoleId" resultType="com.mengxuegu.web.entites.SysPermission">
+        select p.id, p.parent_id, p.name, p.code, p.url, p.type,
+        p.icon, p.remark, p.create_date, p.update_date
+        from sys_role_permission srp left join sys_permission p on srp.permission_id = p.id
+        where srp.role_id = #{roleId}
+    </select>
+
+    <!-- 删除角色对应权限 -->
+    <delete id="deleteRolePermissionByRoleId">
+        delete from sys_role_permission where role_id = #{roleId}
+    </delete>
+
+    <!-- 保存角色权限 -->
+    <insert id="saveRolePermission">
+        insert into sys_role_permission (role_id, permission_id) values
+        <foreach collection="perIds" item="item" index="index" separator=",">
+            (#{roleId}, #{item})
+        </foreach>
+    </insert>
 </mapper>

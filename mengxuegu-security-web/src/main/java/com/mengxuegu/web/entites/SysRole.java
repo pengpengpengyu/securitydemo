@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+import org.apache.commons.collections.CollectionUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -56,8 +57,12 @@ public class SysRole implements Serializable {
     @TableField(exist = false)
     private List<Long> perIds = new ArrayList<>();
 
-    public List<Long> getPerIds () {
-        return permissions.stream().map(SysPermission::getId).collect(Collectors.toList());
+    public List<Long> getPerIds() {
+        if (CollectionUtils.isEmpty(perIds)) {
+            return permissions.stream().map(SysPermission::getId).collect(Collectors.toList());
+        }
+
+        return this.perIds;
     }
 
 }

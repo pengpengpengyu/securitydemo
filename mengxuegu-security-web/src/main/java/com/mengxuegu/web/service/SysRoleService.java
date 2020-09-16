@@ -19,4 +19,22 @@ public interface SysRoleService extends IService<SysRole> {
      * @return
      */
     IPage<SysRole> findPage(Page<SysRole> page, SysRole sysRole);
+
+    /**
+     * 根据角色ID查询角色信息(封装对应权限)
+     *
+     * @param roleId
+     * @return
+     */
+    SysRole findById(Long roleId);
+
+    /**
+     * 删除角色(同时删除角色与用户关联数据)
+     *
+     * @param roleId
+     * @return
+     */
+    boolean deleteById(Long roleId);
+
+
 }
