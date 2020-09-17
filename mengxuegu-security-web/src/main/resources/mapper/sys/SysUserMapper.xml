@@ -54,7 +54,7 @@
 
     <!-- 删除用户与角色关联关系 -->
     <delete id="deleteUserRoleByUserId">
-        delete from sys_user_role where user_id = #{}
+        delete from sys_user_role where user_id = #{userId}
     </delete>
 
     <!-- 保存用户与角色关联关系 -->

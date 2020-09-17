@@ -79,9 +79,9 @@ public class SysUserController {
         ModelAndView mv = new ModelAndView(HTML_PREFIX + "user-form");
         List<SysRole> roles = sysRoleService.list();
         Map<String, Object> params = new HashMap<>();
-        params.put("id", id);
+        params.put("userId", id);
         SysUser sysUser = sysUserMapper.selectSysUserInfo(params);
-        mv.addObject("user", userPage());
+        mv.addObject("user", sysUser);
         mv.addObject("roleList", roles);
         return mv;
     }
