@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -99,7 +100,10 @@ public class SysUser implements UserDetails {
     private List<SysPermission> permissions = new ArrayList<>();
 
     public List<Long> getRoleIds() {
-        return sysRoles.stream().map(SysRole::getId).collect(Collectors.toList());
+        if (CollectionUtils.isEmpty(roleIds)) {
+            return sysRoles.stream().map(SysRole::getId).collect(Collectors.toList());
+        }
+        return roleIds;
     }
 
 

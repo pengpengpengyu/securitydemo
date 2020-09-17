@@ -51,4 +51,17 @@
         left join sys_user_role ur on u.id = ur.user_id
         where ur.role_id = #{roleId}
     </select>
+
+    <!-- 删除用户与角色关联关系 -->
+    <delete id="deleteUserRoleByUserId">
+        delete from sys_user_role where user_id = #{}
+    </delete>
+
+    <!-- 保存用户与角色关联关系 -->
+    <insert id="insertUserRoles">
+        insert into sys_user (user_id, role_id) values
+        <foreach collection="ruleIds" item="item" separator="," index="index">
+            (#{userId}, #{item})
+        </foreach>
+    </insert>
 </mapper>
