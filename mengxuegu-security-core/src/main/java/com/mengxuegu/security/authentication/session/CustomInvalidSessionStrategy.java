@@ -1,6 +1,7 @@
 package com.mengxuegu.security.authentication.session;
 
 import com.mengxuegu.result.MengxueguResult;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.web.session.InvalidSessionStrategy;
@@ -21,6 +22,9 @@ public class CustomInvalidSessionStrategy implements InvalidSessionStrategy {
 
     private SessionRegistry sessionRegistry;
 
+    @Value("${spring.servlet.session.name}")
+    private String sessionName;
+
 
 
     public CustomInvalidSessionStrategy(SessionRegistry sessionRegistry) {
@@ -31,7 +35,7 @@ public class CustomInvalidSessionStrategy implements InvalidSessionStrategy {
     public void onInvalidSessionDetected(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws IOException {
         // 删除已失效的session
         sessionRegistry.removeSessionInformation(httpServletRequest.getRequestedSessionId());
-       // cancleCookie(httpServletRequest, httpServletResponse);
+        cancleCookie(httpServletRequest, httpServletResponse);
         MengxueguResult result = MengxueguResult.build(HttpStatus.UNAUTHORIZED.value(), "登录已超时，请重新登录");
         httpServletResponse.setContentType("application/json;charset=utf-8");
         httpServletResponse.getWriter().write(result.toJsonString());
@@ -44,7 +48,7 @@ public class CustomInvalidSessionStrategy implements InvalidSessionStrategy {
      * @param response
      */
     private void cancleCookie(HttpServletRequest request, HttpServletResponse response) {
-        Cookie cookie = new Cookie("JESSIONID", null);
+        Cookie cookie = new Cookie(sessionName, null);
         cookie.setMaxAge(0);
         cookie.setPath(getCookiePath(request));
 
