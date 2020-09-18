@@ -59,8 +59,8 @@
 
     <!-- 保存用户与角色关联关系 -->
     <insert id="insertUserRoles">
-        insert into sys_user (user_id, role_id) values
-        <foreach collection="ruleIds" item="item" separator="," index="index">
+        insert into sys_user_role (user_id, role_id) values
+        <foreach collection="roleIds" item="item" separator="," index="index">
             (#{userId}, #{item})
         </foreach>
     </insert>

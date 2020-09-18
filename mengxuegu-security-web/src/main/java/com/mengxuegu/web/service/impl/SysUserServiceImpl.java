@@ -69,7 +69,8 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         sysUser = null == sysUser ? sysUser : new SysUser();
         QueryWrapper<SysUser> queryWrapper = new QueryWrapper<>();
         queryWrapper.like(StringUtils.isNotBlank(sysUser.getUsername()), "username", sysUser.getUsername())
-                .eq(StringUtils.isNotBlank(sysUser.getMobile()), "mobile", sysUser.getMobile());
+                .eq(StringUtils.isNotBlank(sysUser.getMobile()), "mobile", sysUser.getMobile())
+                .eq(sysUser.isEnabled(), "is_enabled", 1);
         page = baseMapper.selectPage(page, queryWrapper);
         return page;
     }

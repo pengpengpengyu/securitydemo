@@ -64,6 +64,7 @@ public class SysUserController {
     @PostMapping(value = "/page")
     @PreAuthorize("hasAuthority('sys:user:list')")
     public Object page(SysUser sysUser, Page<SysUser> page) {
+        sysUser.setEnabled(true);
         return MengxueguResult.ok(sysUserService.findPage(sysUser, page));
     }
 
@@ -78,9 +79,12 @@ public class SysUserController {
     public ModelAndView form(@PathVariable(value = "id", required = false) Long id) {
         ModelAndView mv = new ModelAndView(HTML_PREFIX + "user-form");
         List<SysRole> roles = sysRoleService.list();
-        Map<String, Object> params = new HashMap<>();
-        params.put("userId", id);
-        SysUser sysUser = sysUserMapper.selectSysUserInfo(params);
+        SysUser sysUser = new SysUser();
+        if (null != id) {
+            Map<String, Object> params = new HashMap<>();
+            params.put("userId", id);
+            sysUser = sysUserMapper.selectSysUserInfo(params);
+        }
         mv.addObject("user", sysUser);
         mv.addObject("roleList", roles);
         return mv;
