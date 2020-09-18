@@ -21,12 +21,12 @@ import java.util.List;
 public class SysPermission implements Serializable {
 
     @TableId(type = IdType.AUTO)
-    private long id;
+    private Long id;
 
     /**
      * 父级Id
      */
-    private long parentId;
+    private Long parentId;
 
     /**
      * 权限名称
